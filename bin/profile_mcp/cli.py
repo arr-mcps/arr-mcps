@@ -27,6 +27,26 @@ console = Console()
 DESKTOP_GLOBAL = Path.home() / "Documents" / "christopfarr" / "opencode.json"
 PROXMOX_GLOBAL = Path("/root/.config/opencode/opencode.jsonc")
 
+# Project-scoped opencode config names, in discovery priority order. Mirrors
+# opencode's own project-config resolution (walks up from cwd).
+PROJECT_CONFIG_NAMES = ("opencode.json", "opencode.jsonc", ".opencode/opencode.json")
+
+
+def find_project_config(start: Path | None = None) -> Path | None:
+    """Walk up from `start` (default: cwd) looking for a project opencode config.
+
+    Returns the nearest project-scoped config file, or None when none exists.
+    """
+    cur = (start or Path.cwd()).resolve()
+    while True:
+        for name in PROJECT_CONFIG_NAMES:
+            cand = cur / name
+            if cand.is_file():
+                return cand
+        if cur.parent == cur:
+            return None
+        cur = cur.parent
+
 
 def detect_host(global_path: Path) -> str:
     if global_path == PROXMOX_GLOBAL or str(global_path).startswith("/root"):
@@ -98,6 +118,8 @@ def print_header():
     info = (
         "Generates a project-scoped opencode config that loads only the "
         "MCP servers you need for the task at hand.\n\n"
+        "[dim]→ MCP definitions come from the project's own opencode.json when "
+        "found in the cwd tree, else the host's global config[/dim]\n"
         "[dim]→ Pick a named profile (deploy / media / diagnostics / saved)[/dim]\n"
         "[dim]→ Build a custom set, or 'none' to load with no MCP servers[/dim]\n"
         "[dim]→ A <profile>/opencode.json is written; launch opencode there[/dim]"
@@ -493,7 +515,7 @@ def main():
         add_help=False,
     )
     parser.add_argument("--global-config", default=None,
-                        help="Path to the global config that defines all MCP servers")
+                        help="Path to the config that defines all MCP servers (overrides project detection)")
     parser.add_argument("--host", choices=["desktop", "proxmox"], default=None,
                         help="Host whose server keys to use (auto-detected otherwise)")
     parser.add_argument("--dir", default=None,
@@ -521,10 +543,19 @@ def main():
 
     print_header()
 
-    # Resolve global config path
-    global_path = Path(args.global_config) if args.global_config else (
-        DESKTOP_GLOBAL if DESKTOP_GLOBAL.exists() else PROXMOX_GLOBAL
-    )
+    # Resolve global config path. An explicit --global-config wins; otherwise a
+    # project-scoped config in the cwd tree is authoritative; last resort is the
+    # host's global config.
+    project_path = find_project_config()
+    if args.global_config:
+        global_path = Path(args.global_config)
+        source_note = "explicit"
+    elif project_path:
+        global_path = project_path
+        source_note = "project"
+    else:
+        global_path = DESKTOP_GLOBAL if DESKTOP_GLOBAL.exists() else PROXMOX_GLOBAL
+        source_note = "fallback"
     if not global_path.exists():
         console.print(f"[red]Global config not found: {global_path}[/red]")
         return 1
@@ -545,7 +576,7 @@ def main():
         console.print(f"[red]No 'mcp' block found in {global_path}[/red]")
         return 1
 
-    console.print(f"[dim]Global: {global_path}  ·  host: {host}  ·  {len(all_keys)} servers[/dim]")
+    console.print(f"[dim]Global: {global_path} ({source_note})  ·  host: {host}  ·  {len(all_keys)} servers[/dim]")
     console.print()
 
     available = sorted(all_keys)
@@ -586,9 +617,12 @@ def main():
 
     config = build_config(all_keys, enabled, set_name)
 
-    # Output dir
+    # Output dir: alongside the discovered project config when one is in use,
+    # otherwise the host's usual config area.
     if args.dir:
         out_dir = Path(args.dir)
+    elif source_note == "project":
+        out_dir = global_path.parent / label if label != "custom" else global_path.parent / "custom"
     elif host == "proxmox":
         out_dir = Path(f"/root/{label}")
     else:
