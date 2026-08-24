@@ -7,11 +7,13 @@ name = "new-mcp"
 version = "0.0.0"
 description = "Scaffold and release new arr-mcp servers"
 requires-python = ">=3.10"
-dependencies = ["rich>=13.0.0"]
+dependencies = ["rich>=13.0.0", "pmcp"]
 
 [project.scripts]
 new-mcp = "new_mcp.cli:main"
-profile-mcp = "profile_mcp.cli:main"
+
+[tool.uv.sources]
+pmcp = { path = "/home/savagecore/Scratchpad/pmcp" }
 
 [tool.hatch.build.targets.wheel]
-packages = ["new_mcp", "profile_mcp"]
+packages = ["new_mcp"]

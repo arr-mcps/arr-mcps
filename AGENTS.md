@@ -96,18 +96,24 @@ It automates scaffolding, build, release, README registration, and local+remote 
 See [`README.md#adding-a-new-mcp`](README.md#adding-a-new-mcp) for details.
 
 ## Wizard tooling deployment (`bin/`)
-`bin/` is a single `uv` tool project (`new-mcp`, v0.0.0) whose wheel ships both
-`new-mcp` and `profile-mcp` scripts, so one install refreshes both:
+Note: "pmcp" is shorthand for `pmcp` (the profile-mcp wizard), which now lives
+in its own standalone project at `/home/savagecore/Scratchpad/pmcp` (git repo).
+"Add providers to pmcp" means adding `MODEL_SETS` / `HOST_MODEL_SETS` entries in
+that project's `profile_mcp/profiles.py`. `new-mcp` depends on pmcp via a
+`[tool.uv.sources]` path dependency, so keep both checkouts on this machine.
+
+Install each tool from its own project:
 ```bash
 cd /home/savagecore/Git/arr-mcps/bin && uv tool install --force .
+uv tool install --force /home/savagecore/Scratchpad/pmcp
 ```
 The **Proxmox host (`192.168.50.3`) only gets `profile-mcp`** — `new-mcp` is a
 desktop-only scaffolding wizard and must not be installed there. The host's
-`/root/bin` is a plain copy of `bin/` (not a git checkout); sync it, install,
-then drop the `new-mcp` binary so the host ends up with only `profile-mcp`:
+`/root/bin/pmcp` is a plain copy of the pmcp checkout (not a git checkout); sync
+it and install:
 ```bash
-rsync -az --exclude __pycache__ /home/savagecore/Git/arr-mcps/bin/ root@192.168.50.3:/root/bin/
-ssh root@192.168.50.3 -- 'chown -R smbuser:mcp-agent /root/bin && cd /root/bin && uv tool install --force . && rm -f /root/.local/bin/new-mcp'
+rsync -az --exclude __pycache__ --exclude .venv /home/savagecore/Scratchpad/pmcp/ root@192.168.50.3:/root/bin/pmcp/
+ssh root@192.168.50.3 -- 'chown -R smbuser:mcp-agent /root/bin/pmcp && cd /root/bin/pmcp && uv tool install --force .'
 ```
 
 ## Per-server AGENTS.md
