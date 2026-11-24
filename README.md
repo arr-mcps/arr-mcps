@@ -81,6 +81,18 @@ uv tool install radarr_mcp-*.whl
 claude mcp add radarr --env RADARR_URL=... --env RADARR_API_KEY=... -- radarr-mcp
 ```
 
+### [seanime-mcp](https://github.com/arr-mcps/seanime-mcp)
+[![Latest release](https://img.shields.io/github/v/release/arr-mcps/seanime-mcp)](https://github.com/arr-mcps/seanime-mcp/releases/latest)
+
+MCP server for [Seanime](https://github.com/5rahim/seanime) — manage your anime
+library, episodes, manga, playback, torrent integration, AniList sync,
+extensions, settings, and system status.
+
+```bash
+uv tool install seanime_mcp-*.whl
+claude mcp add seanime --env SEANIME_URL=... --env SEANIME_API_KEY=... -- seanime-mcp
+```
+
 ### [sonarr-mcp](https://github.com/arr-mcps/sonarr-mcp)
 [![Latest release](https://img.shields.io/github/v/release/arr-mcps/sonarr-mcp)](https://github.com/arr-mcps/sonarr-mcp/releases/latest)
 
@@ -103,6 +115,30 @@ status, history, statistics, jobs, and configuration of your arr stack cleanup.
 ```bash
 uv tool install cleanuparr_mcp-*.whl
 claude mcp add cleanuparr --env CLEANUPARR_URL=... --env CLEANUPARR_API_KEY=... -- cleanuparr-mcp
+```
+
+### [gokapi-mcp](https://github.com/arr-mcps/gokapi-mcp)
+[![Latest release](https://img.shields.io/github/v/release/arr-mcps/gokapi-mcp)](https://github.com/arr-mcps/gokapi-mcp/releases/latest)
+
+MCP server for [Gokapi](https://github.com/Forceu/Gokapi) — manage file
+shares, chunked uploads, users, file requests, auth keys, logs, downloads,
+and server config.
+
+```bash
+uv tool install gokapi_mcp-*.whl
+claude mcp add gokapi --env GOKAPI_URL=... --env GOKAPI_API_KEY=... -- gokapi-mcp
+```
+
+### [maintainerr-mcp](https://github.com/arr-mcps/maintainerr-mcp)
+[![Latest release](https://img.shields.io/github/v/release/arr-mcps/maintainerr-mcp)](https://github.com/arr-mcps/maintainerr-mcp/releases/latest)
+
+MCP server for [Maintainerr](https://github.com/jorenn92/Maintainerr) —
+manage collections, rules, notifications, and media-server cleanup across
+Jellyfin, Sonarr, Radarr, and Seerr.
+
+```bash
+uv tool install maintainerr_mcp-*.whl
+claude mcp add maintainerr --env MAINTAINERR_URL=... --env MAINTAINERR_API_KEY=... -- maintainerr-mcp
 ```
 
 ### [profilarr-mcp](https://github.com/arr-mcps/profilarr-mcp)
@@ -131,6 +167,18 @@ uv tool install prowlarr_mcp-*.whl
 claude mcp add prowlarr --env PROWLARR_URL=... --env PROWLARR_API_KEY=... -- prowlarr-mcp
 ```
 
+### [seasonpackarr-mcp](https://github.com/arr-mcps/seasonpackarr-mcp)
+[![Latest release](https://img.shields.io/github/v/release/arr-mcps/seasonpackarr-mcp)](https://github.com/arr-mcps/seasonpackarr-mcp/releases/latest)
+
+MCP server for [SeasonPackArr](https://github.com/arr-mcps/seasonpackarr-mcp) —
+check season-pack candidates, match and import packs, and run searches against
+your download clients.
+
+```bash
+uv tool install seasonpackarr_mcp-*.whl
+claude mcp add seasonpackarr --env SEASONPACKARR_URL=... --env SEASONPACKARR_API_KEY=... -- seasonpackarr-mcp
+```
+
 ### [seerr-mcp](https://github.com/arr-mcps/seerr-mcp)
 [![Latest release](https://img.shields.io/github/v/release/arr-mcps/seerr-mcp)](https://github.com/arr-mcps/seerr-mcp/releases/latest)
 
@@ -141,6 +189,17 @@ REST API surface).
 ```bash
 uv tool install seerr_mcp-*.whl
 claude mcp add seerr --env SEERR_URL=... --env SEERR_API_KEY=... -- seerr-mcp
+```
+
+### [wizarr-mcp](https://github.com/arr-mcps/wizarr-mcp)
+[![Latest release](https://img.shields.io/github/v/release/arr-mcps/wizarr-mcp)](https://github.com/arr-mcps/wizarr-mcp/releases/latest)
+
+MCP server for [Wizarr](https://github.com/wizarrrr/wizarr) — manage users,
+invitations, servers, libraries, watch activity, API keys, and admins.
+
+```bash
+uv tool install wizarr_mcp-*.whl
+claude mcp add wizarr --env WIZARR_URL=... --env WIZARR_API_KEY=... -- wizarr-mcp
 ```
 
 ## Download clients
@@ -155,6 +214,18 @@ import lists, notifications, API keys, proxies, and system config.
 ```bash
 uv tool install autobrr_mcp-*.whl
 claude mcp add autobrr --env AUTOBRR_URL=... --env AUTOBRR_API_KEY=... -- autobrr-mcp
+```
+
+### [cross-seed-mcp](https://github.com/arr-mcps/cross-seed-mcp)
+[![Latest release](https://img.shields.io/github/v/release/arr-mcps/cross-seed-mcp)](https://github.com/arr-mcps/cross-seed-mcp/releases/latest)
+
+MCP server for [cross-seed](https://github.com/cross-seed/cross-seed) —
+trigger announce/webhook ingestion, run rss/search/inject jobs, and check
+daemon status.
+
+```bash
+uv tool install cross_seed_mcp-*.whl
+claude mcp add cross-seed --env CROSS_SEED_URL=... --env CROSS_SEED_API_KEY=... -- cross-seed-mcp
 ```
 
 ### [qbittorrent-mcp](https://github.com/arr-mcps/qbittorrent-mcp)
@@ -243,7 +314,8 @@ See `bin/new_mcp/` for the source. The per-MCP subfolders are gitignored, so the
 The desktop and Proxmox opencode configs register every MCP server, but loading
 all of them every session wastes context. `profile-mcp` (in `bin/`, installed
 alongside `new-mcp`) picks a subset of servers and applies it to the next
-opencode session — **regardless of which directory you launch opencode from**.
+`opencode2` session, launched from **whichever directory you ran `profile-mcp`
+in**.
 
 ```bash
 profile-mcp                 # interactive: pick a model set, then a profile or custom set
@@ -288,21 +360,29 @@ heavy agent for the session instead of pinning it to an expensive model.
 
 It discovers the full server list from the host's global opencode config
 (desktop `~/Documents/christopfarr/opencode.json`, Proxmox
-`/root/.config/opencode/opencode.jsonc`) and launches opencode with an
-`OPENCODE_CONFIG_CONTENT` override that sets `enabled` on every known server and
-the `model` for `plan`/`build`/`heavy`, so only your chosen servers and provider
-load. Because that override merges *after* the project config, it wins
-regardless of the working directory — everything else (instructions,
-permissions, agent modes) still loads normally, only the MCP set and the three
-models are scoped for this session. It also writes the same config to
+`/root/.config/opencode/opencode.jsonc`) and writes a v2-shaped profile —
+`disabled` set on every known server not chosen, plus the `model` for
+`plan`/`build`/`heavy` — to `.opencode/opencode.json` in the current directory,
+then launches `opencode2 --standalone` there. `opencode2` merges
+`.opencode/opencode.json` *over* any project-level `opencode.json` in the same
+directory, so everything else (instructions, permissions, agent modes) still
+loads normally — only the MCP set and the three models are scoped for this
+session. `--standalone` avoids the shared background service's config cache, so
+the profile takes effect immediately instead of on the next launch. The
+`.opencode/opencode.json` file is restored to whatever was there before (or
+removed) once `opencode2` exits. It also writes the same config to
 `opencode.json` under the profile name as a reference.
 
-Usage on the Proxmox host (works from any directory):
+(`profile-mcp` targets the `opencode2` v2 beta only — `OPENCODE_CONFIG_CONTENT`
+and `OPENCODE_CONFIG_DIR` are not read by v2's config loader, so injecting a
+profile via environment variable, as v1 allowed, no longer works.)
+
+Usage on the Proxmox host:
 
 ```bash
 ssh root@192.168.50.3
 profile-mcp --host proxmox --non-interactive media --set deepseek
-opencode
+opencode2 --standalone
 ```
 
 See `bin/profile_mcp/` for the source. Built-in profiles and model sets are
