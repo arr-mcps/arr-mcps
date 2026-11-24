@@ -22,10 +22,9 @@ from .templates import PLAN_PROMPT, README_ENTRY
 console = rich.console.Console()
 
 # The christopfarr workspace keeps all its MCP registrations in a project-scoped
-# (gitignored) opencode config, NOT the global ~/.config/opencode/opencode.json.
-# `opencode mcp add` always writes to the global config and ignores the project
-# scope, so we write directly into the config file opencode loads for this
-# workspace instead.
+# (gitignored) opencode config, NOT the global ~/.config/opencode/opencode.json,
+# so we upsert directly into the config file opencode loads for this workspace
+# (one shot including env vars, no interactive prompts).
 LOCAL_OPENCODE_CONFIG = Path.home() / "Documents" / "christopfarr" / "opencode.json"
 REMOTE_OPENCODE_CONFIG = "/root/.config/opencode/opencode.jsonc"
 REMOTE_HOST = "192.168.50.3"
@@ -89,8 +88,8 @@ def resolve_instance_url(service: str, model_set: str = "deepseek-cheap") -> str
 
     try:
         result = subprocess.run(
-            ["opencode", "run", "--dir", str(Path.home() / "Documents/christopfarr"),
-             "--agent", "build", "--model", _util_model(model_set), prompt],
+            ["opencode", "run", "--agent", "build", "--model", _util_model(model_set), prompt],
+            cwd=str(Path.home() / "Documents/christopfarr"),
             capture_output=True,
             text=True,
             timeout=120
@@ -164,9 +163,14 @@ def plan_and_build(service: str, repo: str, mcp_dir: Path, auto_approve: bool = 
     models = MODEL_SETS.get(model_set, MODEL_SETS["go"])
     plan_model = models["plan"]
     build_model = models["build"]
-    run = ["opencode", "run"]
-    if interactive:
-        run.append("-i")
+    # Interactive stages run under `opencode mini` (no positional message and
+    # no --title; the message goes through --prompt instead). Non-interactive
+    # stages use `opencode run` with the message as a positional argument.
+    base = ["opencode", "mini"] if interactive else ["opencode", "run"]
+
+    def msg(text: str) -> list[str]:
+        return ["--prompt", text] if interactive else [text]
+
     console.print()
     console.print(f"[bold cyan]Step 3-4: Plan & Build ({service}-mcp)[/bold cyan]")
     console.print(f"[dim]Model set: {model_set} (plan: {plan_model}, build: {build_model})[/dim]")
@@ -177,10 +181,10 @@ def plan_and_build(service: str, repo: str, mcp_dir: Path, auto_approve: bool = 
     console.print("[dim]Launching opencode plan agent... (output below)[/dim]")
     console.print()
 
+    title = [] if interactive else ["--title", f"{service}-mcp plan"]
     # Run plan in foreground so user sees opencode's formatted output
     result = subprocess.run(
-        run + ["--dir", str(mcp_dir), "--agent", "plan",
-               "--model", plan_model, "--title", f"{service}-mcp plan", plan_prompt],
+        base + ["--agent", "plan", "--model", plan_model] + title + msg(plan_prompt),
         cwd=str(mcp_dir)
     )
 
@@ -209,8 +213,7 @@ def plan_and_build(service: str, repo: str, mcp_dir: Path, auto_approve: bool = 
     console.print()
 
     result = subprocess.run(
-        run + ["--dir", str(mcp_dir), "--agent", "build",
-               "--model", build_model, "--continue", "go"],
+        base + ["--agent", "build", "--model", build_model, "--continue"] + msg("go"),
         cwd=str(mcp_dir)
     )
 
@@ -406,8 +409,8 @@ def _register_in_readme_on_main(service: str, mcp_dir: Path, repo_path: Path, re
 
     try:
         result = subprocess.run(
-            ["opencode", "run", "--dir", str(mcp_dir), "--agent", "build",
-             "--model", _util_model(model_set), prompt],
+            ["opencode", "run", "--agent", "build", "--model", _util_model(model_set), prompt],
+            cwd=str(mcp_dir),
             capture_output=True,
             text=True,
             timeout=120
@@ -456,8 +459,8 @@ def _register_in_readme_on_main(service: str, mcp_dir: Path, repo_path: Path, re
 
     try:
         result = subprocess.run(
-            ["opencode", "run", "--dir", str(mcp_dir), "--agent", "build",
-             "--model", _util_model(model_set), prompt],
+            ["opencode", "run", "--agent", "build", "--model", _util_model(model_set), prompt],
+            cwd=str(mcp_dir),
             capture_output=True,
             text=True,
             timeout=120
@@ -649,7 +652,6 @@ def _upsert_mcp_entry(config_path: Path, service: str, instance_url: str, auth_t
     mcp[f"{service}-mcp"] = {
         "type": "local",
         "command": command,
-        "enabled": True,
         "environment": {
             f"{service_upper}_URL": instance_url,
             f"{service_upper}_API_KEY": auth_token,
@@ -686,7 +688,6 @@ def _upsert_remote_mcp_entry(service: str, instance_url: str, auth_token: str) -
         f"m[{f'{service}-mcp'!r}]={{\n"
         " 'type':'local',\n"
         f" 'command':[os.path.expanduser('~/.local/bin/{service}-mcp')],\n"
-        " 'enabled':True,\n"
         " 'environment':{\n"
         f"  {f'{service_upper}_URL'!r}:{instance_url!r},\n"
         f"  {f'{service_upper}_API_KEY'!r}:{auth_token!r},\n"
@@ -733,10 +734,9 @@ def install_locally(service: str, mcp_dir: Path, instance_url: str = "", auth_to
         console.print()
         console.print("[dim]Registering with opencode...[/dim]")
 
-        # NOTE: `opencode mcp add` always writes to the GLOBAL config
-        # (~/.config/opencode/opencode.json) and ignores project scope. The
-        # christopfarr workspace loads MCPs from the project-scoped config
-        # (LOCAL_OPENCODE_CONFIG), so we edit that file directly.
+        # NOTE: we edit the project-scoped config directly to upsert the entry
+        # with its env vars in one shot instead of stepping through
+        # `opencode mcp add` prompts.
         command = [str(Path.home() / ".local" / "bin" / f"{service}-mcp")]
         with console.status(f"[bold]Adding {service}-mcp to opencode...[/bold]"):
             ok = _upsert_mcp_entry(
