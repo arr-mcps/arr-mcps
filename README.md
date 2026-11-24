@@ -105,7 +105,6 @@ uv tool install sonarr_mcp-*.whl
 claude mcp add sonarr --env SONARR_URL=... --env SONARR_API_KEY=... -- sonarr-mcp
 ```
 
->>>>>>> 650b377 (Register cross-seed, seasonpackarr, wizarr, seanime, gokapi and maintainerr MCPs)
 ## Arr stack helpers
 
 ### [cleanuparr-mcp](https://github.com/arr-mcps/cleanuparr-mcp)
@@ -292,7 +291,6 @@ See [`steps.md`](steps.md) — it covers the full flow end-to-end, from
 scaffolding the new MCP off `tracearr-mcp/` to releasing it, self-registering
 it in this README, and installing it locally and on the server. The per-MCP
 subfolders are gitignored, so the masterlist only ever tracks its own files.
->>>>>>> 650b377 (Register cross-seed, seasonpackarr, wizarr, seanime, gokapi and maintainerr MCPs)
 
 ## License
 
