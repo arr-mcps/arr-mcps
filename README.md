@@ -81,6 +81,31 @@ uv tool install radarr_mcp-*.whl
 claude mcp add radarr --env RADARR_URL=... --env RADARR_API_KEY=... -- radarr-mcp
 ```
 
+### [seanime-mcp](https://github.com/arr-mcps/seanime-mcp)
+[![Latest release](https://img.shields.io/github/v/release/arr-mcps/seanime-mcp)](https://github.com/arr-mcps/seanime-mcp/releases/latest)
+
+MCP server for [Seanime](https://github.com/5rahim/seanime) — manage your anime
+library, episodes, manga, playback, torrent integration, AniList sync,
+extensions, settings, and system status.
+
+```bash
+uv tool install seanime_mcp-*.whl
+claude mcp add seanime --env SEANIME_URL=... --env SEANIME_API_KEY=... -- seanime-mcp
+```
+
+### [sonarr-mcp](https://github.com/arr-mcps/sonarr-mcp)
+[![Latest release](https://img.shields.io/github/v/release/arr-mcps/sonarr-mcp)](https://github.com/arr-mcps/sonarr-mcp/releases/latest)
+
+MCP server for [Sonarr](https://sonarr.tv) — read and manage your TV series
+library: series, episodes, files, queue, history, indexers, import lists,
+custom formats, and more (v3 API surface).
+
+```bash
+uv tool install sonarr_mcp-*.whl
+claude mcp add sonarr --env SONARR_URL=... --env SONARR_API_KEY=... -- sonarr-mcp
+```
+
+>>>>>>> 650b377 (Register cross-seed, seasonpackarr, wizarr, seanime, gokapi and maintainerr MCPs)
 ## Arr stack helpers
 
 ### [cleanuparr-mcp](https://github.com/arr-mcps/cleanuparr-mcp)
@@ -92,6 +117,30 @@ status, history, statistics, jobs, and configuration of your arr stack cleanup.
 ```bash
 uv tool install cleanuparr_mcp-*.whl
 claude mcp add cleanuparr --env CLEANUPARR_URL=... --env CLEANUPARR_API_KEY=... -- cleanuparr-mcp
+```
+
+### [gokapi-mcp](https://github.com/arr-mcps/gokapi-mcp)
+[![Latest release](https://img.shields.io/github/v/release/arr-mcps/gokapi-mcp)](https://github.com/arr-mcps/gokapi-mcp/releases/latest)
+
+MCP server for [Gokapi](https://github.com/Forceu/Gokapi) — manage file
+shares, chunked uploads, users, file requests, auth keys, logs, downloads,
+and server config.
+
+```bash
+uv tool install gokapi_mcp-*.whl
+claude mcp add gokapi --env GOKAPI_URL=... --env GOKAPI_API_KEY=... -- gokapi-mcp
+```
+
+### [maintainerr-mcp](https://github.com/arr-mcps/maintainerr-mcp)
+[![Latest release](https://img.shields.io/github/v/release/arr-mcps/maintainerr-mcp)](https://github.com/arr-mcps/maintainerr-mcp/releases/latest)
+
+MCP server for [Maintainerr](https://github.com/jorenn92/Maintainerr) —
+manage collections, rules, notifications, and media-server cleanup across
+Jellyfin, Sonarr, Radarr, and Seerr.
+
+```bash
+uv tool install maintainerr_mcp-*.whl
+claude mcp add maintainerr --env MAINTAINERR_URL=... --env MAINTAINERR_API_KEY=... -- maintainerr-mcp
 ```
 
 ### [profilarr-mcp](https://github.com/arr-mcps/profilarr-mcp)
@@ -118,6 +167,18 @@ uv tool install prowlarr_mcp-*.whl
 claude mcp add prowlarr --env PROWLARR_URL=... --env PROWLARR_API_KEY=... -- prowlarr-mcp
 ```
 
+### [seasonpackarr-mcp](https://github.com/arr-mcps/seasonpackarr-mcp)
+[![Latest release](https://img.shields.io/github/v/release/arr-mcps/seasonpackarr-mcp)](https://github.com/arr-mcps/seasonpackarr-mcp/releases/latest)
+
+MCP server for [SeasonPackArr](https://github.com/arr-mcps/seasonpackarr-mcp) —
+check season-pack candidates, match and import packs, and run searches against
+your download clients.
+
+```bash
+uv tool install seasonpackarr_mcp-*.whl
+claude mcp add seasonpackarr --env SEASONPACKARR_URL=... --env SEASONPACKARR_API_KEY=... -- seasonpackarr-mcp
+```
+
 ### [seerr-mcp](https://github.com/arr-mcps/seerr-mcp)
 [![Latest release](https://img.shields.io/github/v/release/arr-mcps/seerr-mcp)](https://github.com/arr-mcps/seerr-mcp/releases/latest)
 
@@ -128,6 +189,17 @@ REST API surface).
 ```bash
 uv tool install seerr_mcp-*.whl
 claude mcp add seerr --env SEERR_URL=... --env SEERR_API_KEY=... -- seerr-mcp
+```
+
+### [wizarr-mcp](https://github.com/arr-mcps/wizarr-mcp)
+[![Latest release](https://img.shields.io/github/v/release/arr-mcps/wizarr-mcp)](https://github.com/arr-mcps/wizarr-mcp/releases/latest)
+
+MCP server for [Wizarr](https://github.com/wizarrrr/wizarr) — manage users,
+invitations, servers, libraries, watch activity, API keys, and admins.
+
+```bash
+uv tool install wizarr_mcp-*.whl
+claude mcp add wizarr --env WIZARR_URL=... --env WIZARR_API_KEY=... -- wizarr-mcp
 ```
 
 ## Download clients
@@ -142,6 +214,18 @@ import lists, notifications, API keys, proxies, and system config.
 ```bash
 uv tool install autobrr_mcp-*.whl
 claude mcp add autobrr --env AUTOBRR_URL=... --env AUTOBRR_API_KEY=... -- autobrr-mcp
+```
+
+### [cross-seed-mcp](https://github.com/arr-mcps/cross-seed-mcp)
+[![Latest release](https://img.shields.io/github/v/release/arr-mcps/cross-seed-mcp)](https://github.com/arr-mcps/cross-seed-mcp/releases/latest)
+
+MCP server for [cross-seed](https://github.com/cross-seed/cross-seed) —
+trigger announce/webhook ingestion, run rss/search/inject jobs, and check
+daemon status.
+
+```bash
+uv tool install cross_seed_mcp-*.whl
+claude mcp add cross-seed --env CROSS_SEED_URL=... --env CROSS_SEED_API_KEY=... -- cross-seed-mcp
 ```
 
 ### [qbittorrent-mcp](https://github.com/arr-mcps/qbittorrent-mcp)
@@ -208,6 +292,7 @@ See [`steps.md`](steps.md) — it covers the full flow end-to-end, from
 scaffolding the new MCP off `tracearr-mcp/` to releasing it, self-registering
 it in this README, and installing it locally and on the server. The per-MCP
 subfolders are gitignored, so the masterlist only ever tracks its own files.
+>>>>>>> 650b377 (Register cross-seed, seasonpackarr, wizarr, seanime, gokapi and maintainerr MCPs)
 
 ## License
 
